@@ -1,81 +1,150 @@
-# Campus Resource Management System — Web Version
+# Campus Resource Management System
 
-A Flask web application for managing campus resources and fellows. Planned features include resource inventory, fellow registration, borrowing and returns, search, and reporting.
+A Flask-based web application for managing campus resources, fellows, borrowing, returns, and inventory reports.
 
-**Current status:** Initial Flask homepage built with Jinja templates and CSS. Database-backed management features are planned and not yet implemented.
+## Features
 
-## Technology stack
+### Resource Management
+- Register resources with names, categories, and quantities.
+- View, search, and filter resources.
+- Update resource details and quantities.
+- Delete resources without borrowing history.
+- Prevent invalid stock quantities.
 
-- Python and Flask
-- Jinja templates, HTML, and CSS
-- Flask-SQLAlchemy and SQLite (database integration planned)
-- python-dotenv (configuration support)
+### Fellow Management
+- Register fellows using unique registration IDs.
+- View and update fellow information.
+- Graduate fellows without outstanding loans.
+- Delete graduated fellows without borrowing history.
 
-## Requirements
+### Borrowing and Returns
+- Assign resources to registered, active fellows.
+- Validate available stock before borrowing.
+- Automatically decrease available inventory when borrowing.
+- Restore available inventory when resources are returned.
+- Prevent duplicate returns.
+- Preserve borrowing history.
 
-Python 3, Git, and an internet connection to install Python packages.
+### Dashboard and Reports
+- Display resource, fellow, and active-loan counts.
+- Track total, available, and borrowed units.
+- Identify resources with fewer than three available units.
+- Identify the most borrowed resources, including ties.
 
-## Set up from GitHub (new laptop or wiped workspace)
+## Technology Stack
 
-Run these commands in a terminal:
+- Python
+- Flask
+- Flask-SQLAlchemy
+- SQLAlchemy
+- SQLite
+- HTML, CSS, and Jinja2
+- Python unittest
+
+## Project Structure
+
+```text
+campus_resource_system_web_version/
+├── app/
+│   ├── __init__.py
+│   ├── extensions.py
+│   ├── models.py
+│   ├── routes.py
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── resources.py
+│   │   ├── fellows.py
+│   │   └── loans.py
+│   ├── templates/
+│   │   ├── base.html
+│   │   ├── home.html
+│   │   ├── resources.html
+│   │   ├── fellows.html
+│   │   ├── loans.html
+│   │   └── reports.html
+│   └── static/css/style.css
+├── tests/
+│   ├── test_resources.py
+│   ├── test_fellows.py
+│   ├── test_loans.py
+│   └── test_routes.py
+├── run.py
+├── requirements.txt
+├── .gitignore
+└── README.md
+```
+
+## Installation
+
+Clone the repository:
 
 ```bash
 git clone https://github.com/AlphonsusOrtse/campus_resource_system_web_version.git
 cd campus_resource_system_web_version
+```
+
+Create and activate a virtual environment:
+
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r requirements.txt
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Initialize the database:
+
+```bash
+python -c "from app import create_app; from app.extensions import db; app = create_app(); ctx = app.app_context(); ctx.push(); db.create_all(); ctx.pop()"
+```
+
+Start the application:
+
+```bash
 python run.py
 ```
 
-Open **http://127.0.0.1:5000** in your browser.
+Open `http://127.0.0.1:5000` in your browser.
 
-- `python3 -m venv .venv` creates a virtual environment.
-- `source .venv/bin/activate` activates it on Linux.
-- `python -m pip install -r requirements.txt` installs the project dependencies.
-- `python run.py` starts Flask's local development server. Stop it with **Ctrl+C**.
-
-**If the project folder already exists**, do not clone again. Open it with `cd campus_resource_system_web_version`, activate the existing environment with `source .venv/bin/activate`, and run `python run.py`. If `.venv` was deleted, recreate it and reinstall dependencies using the commands above.
-
-## Quick checks
-
-With the server running, visit **http://127.0.0.1:5000** to check the homepage. You can also run:
+## Running Tests
 
 ```bash
-curl -I http://127.0.0.1:5000/
-curl -I http://127.0.0.1:5000/static/css/style.css
+python -m unittest discover -s tests -v
 ```
 
-Both should return an HTTP 200 response when the app and stylesheet are available.
+Tests cover resource management, fellow management, borrowing, returns, browser routes, and SQLite foreign-key enforcement.
 
-## Project structure
+## Database Integrity
 
-```text
-app/
-  __init__.py           # Flask application factory
-  routes.py             # HTTP routes
-  templates/
-    base.html           # Shared page layout
-    home.html           # Homepage
-  static/css/
-    style.css           # Styling
-run.py                  # Development entry point
-requirements.txt        # Python dependencies
-.gitignore              # Excluded local files
-README.md               # Project documentation
-```
+The application uses database constraints to prevent negative inventory quantities and invalid loan quantities.
 
-## Save progress before leaving
+SQLite foreign-key enforcement is enabled for database connections.
 
-Review changes before committing:
+The database is stored locally and excluded from Git version control.
 
-```bash
-git status
-git add README.md
-git commit -m "docs: add project setup and recovery instructions"
-git push origin main
-```
+## Current Scope
 
-For future code changes, stage the relevant files rather than only `README.md`. **Only committed and pushed changes are recoverable from GitHub.** The `.venv` folder is intentionally not committed; recreate it after a wipe. Local SQLite data and secrets are not automatically backed up by Git.
+This project is a functional local MVP intended for development, learning, and portfolio demonstration.
 
-> This app currently runs with Flask's development server. Do not expose the debugger publicly or use the development server in production.
+It is not yet suitable for public multi-user deployment. Before production deployment, it needs authentication, authorization, CSRF protection, secure configuration, and stronger concurrent inventory updates.
+
+## Future Improvements
+
+- User authentication and role-based access
+- Improved mobile interface
+- Pagination and advanced inventory filtering
+- CSV/PDF report exports
+- Database migrations
+- Production deployment
+
+## Author
+
+Alphonsus Ortse
+
+GitHub: https://github.com/AlphonsusOrtse
+
+Portfolio: https://alphonsusortse.github.io
