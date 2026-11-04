@@ -1,0 +1,30 @@
+
+{% extends "base.html" %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+<h1>Inventory Reports</h1>
+
+<div class="stats">
+    <div class="stat"><strong>{{ total }}</strong><span>Total Units</span></div>
+    <div class="stat"><strong>{{ available }}</strong><span>Available Units</span></div>
+    <div class="stat"><strong>{{ borrowed }}</strong><span>Currently Borrowed</span></div>
+</div>
+
+<h2>Low Stock (Fewer Than 3 Available)</h2>
+<ul>
+    {% for r in low_stock %}
+    <li>{{ r.name }} — {{ r.available_units }} remaining</li>
+    {% else %}
+    <li>No low-stock resources.</li>
+    {% endfor %}
+</ul>
+
+<h2>Most Borrowed Resources (All-Time)</h2>
+<ul>
+    {% for resource, count in most_borrowed %}
+    <li>{{ resource.name }} — {{ count }} units borrowed</li>
+    {% else %}
+    <li>No borrowing history yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

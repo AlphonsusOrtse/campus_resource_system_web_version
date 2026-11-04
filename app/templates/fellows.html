@@ -1,0 +1,47 @@
+
+{% extends "base.html" %}
+{% block title %}Fellows{% endblock %}
+{% block content %}
+<h1>Fellow Management</h1>
+
+<h2>Register Fellow</h2>
+<form method="post" action="{{ url_for('main.fellow_create') }}">
+    <input name="fellow_id" placeholder="Registration ID e.g. F001" required>
+    <input name="name" placeholder="Full name" required>
+    <button>Register</button>
+</form>
+
+<h2>Registered Fellows</h2>
+<div class="table-wrap">
+<table>
+    <thead><tr><th>ID</th><th>Registration</th><th>Name</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for f in fellows %}
+    <tr>
+        <td>{{ f.id }}</td>
+        <td>{{ f.fellow_id }}</td>
+        <td>{{ f.name }}</td>
+        <td>{{ "Graduated" if f.graduated else "Active" }}</td>
+        <td>
+            <form method="post" action="{{ url_for('main.fellow_update', fellow_id=f.id) }}">
+                <input name="name" value="{{ f.name }}" required>
+                <button>Update</button>
+            </form>
+            {% if not f.graduated %}
+            <form method="post" action="{{ url_for('main.fellow_graduate', fellow_id=f.id) }}">
+                <button>Graduate</button>
+            </form>
+            {% else %}
+            <form method="post" action="{{ url_for('main.fellow_delete', fellow_id=f.id) }}">
+                <button class="danger">Delete</button>
+            </form>
+            {% endif %}
+        </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">No fellows registered.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

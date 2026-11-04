@@ -1,0 +1,53 @@
+
+{% extends "base.html" %}
+{% block title %}Resources{% endblock %}
+{% block content %}
+<h1>Resource Management</h1>
+
+<h2>Add Resource</h2>
+<form method="post" action="{{ url_for('main.resource_create') }}">
+    <input name="name" placeholder="Resource name" required>
+    <input name="category" placeholder="Category" required>
+    <input name="total_units" type="number" min="1" placeholder="Total units" required>
+    <button>Add Resource</button>
+</form>
+
+<h2>Search Inventory</h2>
+<form method="get">
+    <input name="search" placeholder="Search by name" value="{{ search }}">
+    <input name="category" placeholder="Filter category" value="{{ category }}">
+    <button>Search</button>
+    <a href="{{ url_for('main.resources') }}">Clear</a>
+</form>
+
+<h2>Inventory</h2>
+<div class="table-wrap">
+<table>
+    <thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Total</th><th>Available</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for r in resources %}
+    <tr>
+        <td>{{ r.id }}</td>
+        <td>{{ r.name }}</td>
+        <td>{{ r.category }}</td>
+        <td>{{ r.total_units }}</td>
+        <td>{{ r.available_units }}</td>
+        <td>
+            <form method="post" action="{{ url_for('main.resource_update', resource_id=r.id) }}">
+                <input name="name" value="{{ r.name }}" required>
+                <input name="category" value="{{ r.category }}" required>
+                <input name="total_units" type="number" min="0" value="{{ r.total_units }}" required>
+                <button>Update</button>
+            </form>
+            <form method="post" action="{{ url_for('main.resource_delete', resource_id=r.id) }}">
+                <button class="danger">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">No resources found.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

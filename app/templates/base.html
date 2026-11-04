@@ -1,32 +1,39 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>{% block title %}Campus Resource System{% endblock %}</title>
-
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
 <body>
-
     <header>
         <nav>
             <h2>Campus Resource Management</h2>
+            <div class="nav-links">
+                <a href="{{ url_for('main.home') }}">Dashboard</a>
+                <a href="{{ url_for('main.resources') }}">Resources</a>
+                <a href="{{ url_for('main.fellows') }}">Fellows</a>
+                <a href="{{ url_for('main.loans') }}">Loans</a>
+                <a href="{{ url_for('main.reports') }}">Reports</a>
+            </div>
         </nav>
     </header>
 
     <main>
-        {% block content %}
-        {% endblock %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <p class="message {{ category }}">{{ message }}</p>
+            {% endfor %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
     </main>
 
     <footer>
         <p>Campus Resource Management System</p>
     </footer>
-
 </body>
 </html>

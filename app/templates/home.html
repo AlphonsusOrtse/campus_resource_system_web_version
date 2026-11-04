@@ -1,27 +1,23 @@
-{% extends "base.html" %}
 
-{% block title %}
-Home | Campus Resource System
-{% endblock %}
+{% extends "base.html" %}
+{% block title %}Dashboard | Campus Resource System{% endblock %}
 
 {% block content %}
+<h1>Campus Dashboard</h1>
+<p>Manage campus inventory, fellows, and borrowing activities.</p>
 
-<section>
-    <h1>Welcome to Campus Resource Management System</h1>
+<div class="stats">
+    <div class="stat"><strong>{{ resource_count }}</strong><span>Resources</span></div>
+    <div class="stat"><strong>{{ fellow_count }}</strong><span>Fellows</span></div>
+    <div class="stat"><strong>{{ active_count }}</strong><span>Active Loans</span></div>
+    <div class="stat"><strong>{{ available }}</strong><span>Available Units</span></div>
+</div>
 
-    <p>
-        A web application for managing campus resources,
-        fellows, borrowing, and returns.
-    </p>
-
-    <h2>System Features</h2>
-
-    <ul>
-        <li>Resource Management</li>
-        <li>Fellow Management</li>
-        <li>Borrowing and Returns</li>
-        <li>Resource Reports</li>
-    </ul>
-</section>
-
+<h2>Quick Actions</h2>
+<div class="actions">
+    <a class="button" href="{{ url_for('main.resources') }}">Manage Resources</a>
+    <a class="button" href="{{ url_for('main.fellows') }}">Manage Fellows</a>
+    <a class="button" href="{{ url_for('main.loans') }}">Borrow / Return</a>
+    <a class="button" href="{{ url_for('main.reports') }}">View Reports</a>
+</div>
 {% endblock %}

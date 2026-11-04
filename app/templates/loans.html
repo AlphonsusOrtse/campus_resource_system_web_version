@@ -1,0 +1,53 @@
+
+{% extends "base.html" %}
+{% block title %}Loans{% endblock %}
+{% block content %}
+<h1>Borrowing and Returns</h1>
+
+<h2>Borrow a Resource</h2>
+<form method="post" action="{{ url_for('main.loan_borrow') }}">
+    <select name="fellow_id" required>
+        <option value="">Select fellow</option>
+        {% for f in fellows if not f.graduated %}
+        <option value="{{ f.id }}">{{ f.name }} ({{ f.fellow_id }})</option>
+        {% endfor %}
+    </select>
+    <select name="resource_id" required>
+        <option value="">Select resource</option>
+        {% for r in resources if r.available_units > 0 %}
+        <option value="{{ r.id }}">{{ r.name }} ({{ r.available_units }} available)</option>
+        {% endfor %}
+    </select>
+    <input type="number" name="quantity" min="1" placeholder="Quantity" required>
+    <button>Borrow</button>
+</form>
+
+<h2>Loan Records</h2>
+<div class="table-wrap">
+<table>
+    <thead><tr><th>ID</th><th>Fellow</th><th>Resource</th><th>Quantity</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>
+    {% for loan in loans %}
+    <tr>
+        <td>{{ loan.id }}</td>
+        <td>{{ loan.fellow.name }}</td>
+        <td>{{ loan.resource.name }}</td>
+        <td>{{ loan.quantity }}</td>
+        <td>{{ "Returned" if loan.returned_at else "Active" }}</td>
+        <td>
+            {% if not loan.returned_at %}
+            <form method="post" action="{{ url_for('main.loan_return', loan_id=loan.id) }}">
+                <button>Return</button>
+            </form>
+            {% else %}
+            Completed
+            {% endif %}
+        </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">No loans recorded.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}
