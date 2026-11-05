@@ -63,6 +63,15 @@ class FellowTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             delete_fellow(fellow.id)
 
+    def test_case_insensitive_fellow_id(self):
+        first = create_fellow("f001", "John")
+
+        self.assertEqual(first.fellow_id, "F001")
+
+        with self.assertRaises(ValueError):
+            create_fellow("F001", "Mary")
+
+        self.assertEqual(len(list_fellows()), 1)
 
 if __name__ == "__main__":
     unittest.main()

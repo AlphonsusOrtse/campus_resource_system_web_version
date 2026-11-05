@@ -1,4 +1,4 @@
-
+from sqlalchemy import func
 from app.extensions import db
 from app.models import Fellow
 
@@ -10,12 +10,17 @@ def create_fellow(fellow_id, name):
     if not isinstance(name, str) or not name.strip():
         raise ValueError("Fellow name is required")
 
-    fellow_id = fellow_id.strip()
+    fellow_id = fellow_id.strip().upper()
     name = name.strip()
 
-    if db.session.execute(
-        db.select(Fellow).filter_by(fellow_id=fellow_id)
-    ).scalar_one_or_none():
+    # Check for duplicate IDs regardless of letter case
+    existing_fellow = db.session.execute(
+        db.select(Fellow).where(
+            func.upper(Fellow.fellow_id) == fellow_id
+        )
+    ).scalar_one_or_none()
+
+    if existing_fellow is not None:
         raise ValueError("Fellow ID already exists")
 
     fellow = Fellow(
